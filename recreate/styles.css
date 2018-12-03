@@ -1,0 +1,17 @@
+/*Toolbars/Sidebars*/
+/*#4B4237*/
+
+/*Backgrounds*/
+/*#ede7d9*/
+/*#eee9dc*/
+
+/*Active*/
+/*#D5A021*/
+.core-btn{
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+}
+.generic-field{
+  position: absolute;
+}
