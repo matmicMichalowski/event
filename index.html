@@ -7,19 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="index.js"></script>
+
 </head>
 <body>
     <div class="cubes" id="cubes">
         <div class="cube-div" id="red-cube" style="background-color: red"></div>
-        <div class="cube-div" id="black-cube" style="background-color: black"></div>
+        <div class="cube-div" id="black-cube" style="background-color: black; left: 150px;"></div>
         <div class="cube-div" id="yellow-cube" style="background-color: yellow"></div>
     </div>
-    <div class="cube-div" id="green-cube" style="background-color: green"></div>
+    <!--<div class="cube-div" id="green-cube" style="background-color: green"></div>-->
+    <button onclick="addNew()">ADD NEW</button>
+    <button onclick="addNewText()">ADD TEXT</button>
 
     <script>
         let activeElement = null;
         [...document.getElementsByClassName("cube-div")].forEach(el => {
-            el.addEventListener('click', function(){
+            el.addEventListener('mousedown', function(){
                 if (activeElement != null){
                     activeElement.classList.remove("active")
                 }
@@ -27,9 +30,67 @@
                 activeElement = el;
                 dragElement(activeElement);
                 // rotateElement(activeElement);
-                console.log(el.id, " clicked");
             })
         })
+
+        document.documentElement.addEventListener("click", function (event) {
+            if (!event.target.classList.contains("cube-div") && activeElement){
+                activeElement.classList.remove("active");
+                activeElement = null
+            }
+        });
+
+        function toggleActive(element) {
+            if (activeElement) {
+                if (!activeElement.isSameNode(element)) {
+                    activeElement.classList.remove("active")
+                    element.classList.add("active")
+                    activeElement = element
+                }
+            }else {
+                element.classList.add("active")
+                activeElement = element
+            }
+        }
+        function addNewText() {
+            let newElement = document.createElement("div");
+            let innerTag = document.createElement("p");
+            newElement.classList.add("cube-div");
+            newElement.id = Math.random().toString();
+            newElement.style.top="0";
+            newElement.style.left="0";
+            newElement.appendChild(innerTag)
+            newElement.addEventListener('dblclick', function () {
+                console.log("reaction")
+                if (newElement.contentEditable !== "true") {
+                    newElement.contentEditable = "true"
+                }
+            });
+            toggleActive(newElement)
+            document.getElementById("cubes").appendChild(newElement);
+            activeElement = newElement;
+        }
+
+
+        function addNew() {
+           let newElement = document.createElement("div");
+           newElement.classList.add("cube-div");
+           newElement.id = Math.random().toString();
+           newElement.style.top="0";
+           newElement.style.left="0";
+           newElement.style.backgroundColor="darkgrey";
+
+           newElement.addEventListener('mousedown', function(){
+               toggleActive(event.target)
+              dragElement(newElement)
+           });
+           if (activeElement){
+            activeElement.classList.remove("active");
+           }
+           newElement.classList.add("active");
+           document.getElementById("cubes").appendChild(newElement);
+           activeElement = newElement;
+        }
     </script>
 </body>
 </html>

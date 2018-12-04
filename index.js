@@ -9,7 +9,7 @@ function dragElement(element) {
     init = function() {
       // Mouse Events
       drag.addEventListener('mousedown', start, false);
-      document.documentElement.addEventListener('mousemove', function(event) {
+      element.parentElement.addEventListener('mousemove', function(event) {
         if (active === true) {
           move(event);
         }
