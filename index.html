@@ -18,29 +18,96 @@
     <!--<div class="cube-div" id="green-cube" style="background-color: green"></div>-->
     <button onclick="addNew()">ADD NEW</button>
     <button onclick="addNewText()">ADD TEXT</button>
+    <p id="Etype"></p>
+    <p id="Etarget"></p>
 
     <script>
-        let activeElement = null;
-        [...document.getElementsByClassName("cube-div")].forEach(el => {
-            el.addEventListener('mousedown', function(){
-                if (activeElement != null){
-                    activeElement.classList.remove("active")
+
+        function getEvtType(evt) {
+            console.group();
+
+            let currEvent = evt.type;
+            let currEventValue = evt.key;
+            let currTarget = evt.target;
+
+            let restrictedToggleEvents = ["mousemove", "keypress"].filter(el => el ===  currEvent).length < 1
+
+
+            if (currTarget.classList.contains("cube-div")) {
+                if (restrictedToggleEvents){
+                    toggleActive(currTarget)
                 }
-                el.classList.add("active")
-                activeElement = el;
-                dragElement(activeElement);
-                // rotateElement(activeElement);
-            })
-        })
-
-        document.documentElement.addEventListener("click", function (event) {
-            if (!event.target.classList.contains("cube-div") && activeElement){
-                activeElement.classList.remove("active");
-                activeElement = null
+                if (currEvent=== "mousemove") {
+                    console.log("cube")
+                    dragElement(currTarget)
+                }else if( currEvent === "dblclick"){
+                    currTarget.contentEditable = "true"
+                }
+            }else{
+                if (activeElement && currEvent === "keypress"){
+                    activeElement.innerText += evt.key;
+                } else if (activeElement && restrictedToggleEvents){
+                    activeElement.classList.remove("active")
+                    activeElement.removeAttribute("contenteditable")
+                    activeElement = null;
+                }
             }
-        });
 
+
+
+            console.log(currEvent);
+            console.log(currEventValue);
+            console.log(currTarget);
+
+            document.getElementById("Etype").innerHTML = currEvent;
+            document.getElementById("Etarget").innerHTML = currTarget;
+
+            console.groupEnd()
+        }
+
+
+        document.addEventListener("click", getEvtType, false);
+        document.addEventListener("keypress", getEvtType, false);
+        document.addEventListener("dblclick", getEvtType, false);
+
+        document.addEventListener("mousedown", getEvtType, false);
+        document.addEventListener("mouseup", getEvtType, false);
+        document.getElementById("cubes").addEventListener("mousemove", getEvtType, false);
+
+
+        let activeElement = null;
+        // [...document.getElementsByClassName("cube-div")].forEach(el => {
+        //     el.addEventListener('mousedown', function(){
+        //         if (activeElement != null){
+        //             activeElement.classList.remove("active")
+        //         }
+        //         el.classList.add("active")
+        //         activeElement = el;
+        //         dragElement(activeElement);
+        //         // rotateElement(activeElement);
+        //     })
+        // })
+        //
+        // document.documentElement.addEventListener("click", function (event) {
+        //     if (!event.target.classList.contains("cube-div") && activeElement){
+        //         activeElement.classList.remove("active");
+        //         activeElement = null
+        //     }
+        // });
+        //
         function toggleActive(element) {
+            if (activeElement) {
+                if (!activeElement.isSameNode(element)) {
+                    activeElement.classList.remove("active")
+                    element.classList.add("active")
+                    activeElement = element
+                }
+            }else {
+                element.classList.add("active")
+                activeElement = element
+            }
+        }
+        function toggleEditable(element) {
             if (activeElement) {
                 if (!activeElement.isSameNode(element)) {
                     activeElement.classList.remove("active")

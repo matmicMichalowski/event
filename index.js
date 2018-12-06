@@ -26,7 +26,7 @@ function dragElement(element) {
           My = e.clientY,
           l = drag.getBoundingClientRect().left,
           t = drag.getBoundingClientRect().top;
-      // offset 
+      // offset
       _x = Mx - l;
       _y = My - t;
       return active = true;
